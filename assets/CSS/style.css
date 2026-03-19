@@ -596,3 +596,27 @@ body {
   .filter-grid { grid-template-columns: repeat(4, 1fr); }
   .settings-panel { grid-template-columns: 1fr; }
 }
+
+/* ── BACKGROUND BUTTONS ── */
+.bg-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+}
+.bg-btn {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  font-family: var(--font-vt); font-size: 0.78rem;
+  padding: 6px 4px; cursor: pointer;
+  transition: all .2s; letter-spacing: 1px;
+}
+.bg-btn.active, .bg-btn:hover {
+  border-color: var(--pink, #ff00aa);
+  color: var(--pink, #ff00aa);
+  box-shadow: 0 0 10px rgba(255,0,170,0.5);
+}
+
+/* Live canvas fills camera box */
+#live-canvas {
+  position: absolute; inset: 0;
+  width: 100% !important; height: 100% !important;
+}
