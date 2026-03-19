@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PIXEL BOOTH — Retro Arcade Photobooth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body>
+
+  <!-- SCANLINES OVERLAY -->
+  <div class="scanlines"></div>
+  <div class="crt-vignette"></div>
+
+  <!-- PIXEL PARTICLES -->
+  <div id="pixel-particles"></div>
+
+  <!-- ══ HEADER ══ -->
+  <header class="arcade-header">
+    <div class="header-decor left">
+      <span class="blink">▶</span> INSERT COIN <span class="blink">◀</span>
+    </div>
+    <div class="logo-wrap">
+      <h1 class="logo" id="logo-text">PIXEL BOOTH</h1>
+      <div class="logo-sub">// RETRO ARCADE PHOTOBOOTH //</div>
+    </div>
+    <div class="header-decor right">
+      <span id="score-display">SCORE: <span id="score-val">000000</span></span>
+    </div>
+  </header>
+
+  <!-- ══ MAIN APP ══ -->
+  <main class="app-container">
+
+    <!-- ── STEP 1: SETUP SCREEN ── -->
+    <section class="screen active" id="screen-setup">
+      <div class="screen-inner">
+        <div class="screen-title">
+          <span class="pixel-icon">👾</span> PLAYER SETUP <span class="pixel-icon">👾</span>
+        </div>
+
+        <div class="setup-grid">
+          <!-- Name Input -->
+          <div class="setup-card">
+            <label class="card-label">// ENTER YOUR NAME</label>
+            <div class="input-wrap">
+              <span class="input-prefix">P1 &gt;</span>
+              <input type="text" id="player-name" class="arcade-input" placeholder="YOUR NAME HERE" maxlength="16" />
+            </div>
+          </div>
+
+          <!-- Photo Count -->
+          <div class="setup-card">
+            <label class="card-label">// SELECT PHOTO COUNT</label>
+            <div class="count-selector">
+              <button class="count-btn" id="count-minus">◀</button>
+              <div class="count-display">
+                <span id="count-val">4</span>
+                <span class="count-label">SHOTS</span>
+              </div>
+              <button class="count-btn" id="count-plus">▶</button>
+            </div>
+          </div>
+
+          <!-- Layout -->
+          <div class="setup-card">
+            <label class="card-label">// STRIP LAYOUT</label>
+            <div class="layout-options">
+              <button class="layout-btn active" data-layout="vertical">
+                <div class="layout-preview vertical-preview"></div>
+                <span>STRIP</span>
+              </button>
+              <button class="layout-btn" data-layout="grid">
+                <div class="layout-preview grid-preview"></div>
+                <span>GRID</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <button class="arcade-btn primary big" id="btn-start-setup">
+          <span class="btn-text">▶ START GAME</span>
+          <span class="btn-glow"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── STEP 2: CAMERA SCREEN ── -->
+    <section class="screen" id="screen-camera">
+      <div class="screen-inner camera-layout">
+
+        <!-- LEFT: Camera -->
+        <div class="camera-section">
+          <div class="camera-frame-wrap">
+            <div class="camera-corner tl"></div>
+            <div class="camera-corner tr"></div>
+            <div class="camera-corner bl"></div>
+            <div class="camera-corner br"></div>
+
+            <div class="camera-box" id="camera-box">
+              <video id="video" autoplay playsinline muted></video>
+              <canvas id="filter-canvas" style="display:none"></canvas>
+              <div class="frame-overlay" id="frame-overlay"></div>
+              <div class="countdown-display" id="countdown-display"></div>
+              <div class="flash-overlay" id="flash-overlay"></div>
+            </div>
+          </div>
+
+          <!-- Shot progress -->
+          <div class="shot-progress">
+            <div class="shot-label">SHOTS TAKEN:</div>
+            <div class="shot-dots" id="shot-dots"></div>
+          </div>
+
+          <!-- Controls -->
+          <div class="camera-controls">
+            <button class="arcade-btn secondary" id="btn-retake">↩ RETAKE</button>
+            <button class="arcade-btn primary" id="btn-capture">📷 SHOOT!</button>
+            <button class="arcade-btn secondary" id="btn-done-capture" style="display:none">✓ DONE</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Settings Panel -->
+        <div class="settings-panel">
+
+          <!-- Filters -->
+          <div class="panel-section">
+            <div class="panel-title">// FILTERS</div>
+            <div class="filter-grid" id="filter-grid">
+              <button class="filter-btn active" data-filter="none">
+                <div class="filter-preview" style="background:#888"></div>
+                <span>NORMAL</span>
+              </button>
+              <button class="filter-btn" data-filter="grayscale">
+                <div class="filter-preview" style="background:linear-gradient(#fff,#000)"></div>
+                <span>B&W</span>
+              </button>
+              <button class="filter-btn" data-filter="sepia">
+                <div class="filter-preview" style="background:linear-gradient(#c8a882,#7a5c38)"></div>
+                <span>SEPIA</span>
+              </button>
+              <button class="filter-btn" data-filter="vintage">
+                <div class="filter-preview" style="background:linear-gradient(#d4a45c,#8b5e3c)"></div>
+                <span>VINTAGE</span>
+              </button>
+              <button class="filter-btn" data-filter="cool">
+                <div class="filter-preview" style="background:linear-gradient(#4af,#048)"></div>
+                <span>COOL</span>
+              </button>
+              <button class="filter-btn" data-filter="warm">
+                <div class="filter-preview" style="background:linear-gradient(#fa8,#c40)"></div>
+                <span>WARM</span>
+              </button>
+              <button class="filter-btn" data-filter="pixel">
+                <div class="filter-preview" style="background:repeating-linear-gradient(45deg,#f0f,#00f 4px)"></div>
+                <span>PIXEL</span>
+              </button>
+              <button class="filter-btn" data-filter="glitch">
+                <div class="filter-preview" style="background:linear-gradient(#0ff,#f0f,#ff0)"></div>
+                <span>GLITCH</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Frames -->
+          <div class="panel-section">
+            <div class="panel-title">// FRAMES</div>
+            <div class="frame-grid" id="frame-grid">
+              <button class="frame-btn active" data-frame="none">NONE</button>
+              <button class="frame-btn" data-frame="arcade">ARCADE</button>
+              <button class="frame-btn" data-frame="pixels">PIXELS</button>
+              <button class="frame-btn" data-frame="stars">STARS</button>
+              <button class="frame-btn" data-frame="retro">RETRO</button>
+              <button class="frame-btn" data-frame="neon">NEON</button>
+            </div>
+          </div>
+
+          <!-- Timer -->
+          <div class="panel-section">
+            <div class="panel-title">// TIMER</div>
+            <div class="timer-options">
+              <button class="timer-btn active" data-timer="3">3s</button>
+              <button class="timer-btn" data-timer="5">5s</button>
+              <button class="timer-btn" data-timer="10">10s</button>
+            </div>
+          </div>
+
+          <!-- Player info -->
+          <div class="panel-section player-info-mini">
+            <div class="panel-title">// PLAYER</div>
+            <div class="player-mini-name" id="player-mini-name">—</div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STEP 3: RESULT SCREEN ── -->
+    <section class="screen" id="screen-result">
+      <div class="screen-inner result-layout">
+
+        <div class="result-title">
+          <span class="blink">★</span> PHOTO COMPLETE! <span class="blink">★</span>
+        </div>
+        <div class="result-player-name" id="result-name"></div>
+
+        <!-- Strip preview -->
+        <div class="strip-wrap">
+          <canvas id="strip-canvas"></canvas>
+        </div>
+
+        <!-- Actions -->
+        <div class="result-actions">
+          <button class="arcade-btn primary" id="btn-download">
+            ⬇ DOWNLOAD STRIP
+          </button>
+          <button class="arcade-btn secondary" id="btn-show-qr">
+            📱 QR CODE
+          </button>
+          <button class="arcade-btn secondary" id="btn-new-game">
+            ↺ NEW GAME
+          </button>
+        </div>
+
+        <!-- QR Panel -->
+        <div class="qr-panel" id="qr-panel" style="display:none">
+          <div class="panel-title">// SCAN TO DOWNLOAD</div>
+          <div id="qr-code-container"></div>
+          <div class="qr-hint">Scan with your phone camera</div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ══ -->
+  <footer class="arcade-footer">
+    <span class="blink">©</span> PIXEL BOOTH · NAUFAL RAKHADETO · 2026
+    <span class="blink">©</span>
+  </footer>
+
+  <!-- QR Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- App Scripts (order matters) -->
+  <script src="assets/js/sounds.js"></script>
+  <script src="assets/js/filters.js"></script>
+  <script src="assets/js/frames.js"></script>
+  <script src="assets/js/camera.js"></script>
+  <script src="assets/js/strip.js"></script>
+  <script src="assets/js/download.js"></script>
+  <script src="assets/js/app.js"></script>
+
+</body>
+</html>
