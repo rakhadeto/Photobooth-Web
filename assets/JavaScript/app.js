@@ -137,6 +137,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  // Background buttons
+  document.querySelectorAll('.bg-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.bg-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      Backgrounds.setBackground(btn.dataset.bg);
+      Sounds.click();
+    });
+  });
+
   // Timer buttons
   document.querySelectorAll('.timer-btn').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -229,5 +239,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── INIT ──
   initParticles();
+  Download.checkAutoDownload();
   showScreen('screen-setup');
 });
